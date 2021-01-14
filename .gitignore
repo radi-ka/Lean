@@ -37,6 +37,8 @@
 # Include docker launch scripts for Mac/Linux
 !run_docker.sh
 !research/run_docker_notebook.sh
+!run_backtest.sh
+!rider.sh
 
 # QC Config Files:
 # config.json

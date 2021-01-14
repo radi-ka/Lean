@@ -1,0 +1,65 @@
+{  
+  //Physical DLL location
+  "algorithm-location": "QuantConnect.Algorithm.CSharp.dll",
+
+  // algorithm class selector
+  "algorithm-type-name": "NnfxAlgorithm",
+
+  "environment": "backtesting",
+
+  // Algorithm language selector - options CSharp, FSharp, VisualBasic, Python, Java
+  "algorithm-language": "CSharp",
+
+  // engine
+  "data-folder": "../../../Data/",
+
+  // debugging configuration - options for debugging-method LocalCmdLine, VisualStudio, PTVSD, PyCharm
+  "debugging": false,
+  "debugging-method": "LocalCmdline",
+
+  // handlers
+  "log-handler": "QuantConnect.Logging.CompositeLogHandler",
+  "messaging-handler": "QuantConnect.Messaging.Messaging",
+  "job-queue-handler": "QuantConnect.Queues.JobQueue",
+  "api-handler": "QuantConnect.Api.Api",
+  "map-file-provider": "QuantConnect.Data.Auxiliary.LocalDiskMapFileProvider",
+  "factor-file-provider": "QuantConnect.Data.Auxiliary.LocalDiskFactorFileProvider",
+  "data-provider": "QuantConnect.Lean.Engine.DataFeeds.DefaultDataProvider",
+  "alpha-handler": "QuantConnect.Lean.Engine.Alphas.DefaultAlphaHandler",
+  "data-channel-provider": "DataChannelProvider",
+  "object-store": "QuantConnect.Lean.Engine.Storage.LocalObjectStore",
+  "data-aggregator": "QuantConnect.Lean.Engine.DataFeeds.AggregationManager",
+
+  // limits on number of symbols to allow
+  "symbol-minute-limit": 10000,
+  "symbol-second-limit": 10000,
+  "symbol-tick-limit": 10000,
+
+  // limits the amount of data points per chart series. Applies only for backtesting
+  "maximum-data-points-per-chart-series": 4000,
+
+  // if one uses true in following token, market hours will remain open all hours and all days.
+  // if one uses false will make lean operate only during regular market hours.
+  "force-exchange-always-open": false,
+
+  // save list of transactions to the specified csv file
+  "transaction-log": "",
+
+  // live data configuration
+  "live-data-url": "ws://www.quantconnect.com/api/v2/live/data/",
+  "live-data-port": 8020,
+
+  "environments": {
+    "backtesting": {
+      "live-mode": false,
+
+      "setup-handler": "QuantConnect.Lean.Engine.Setup.ConsoleSetupHandler",
+      "result-handler": "QuantConnect.Lean.Engine.Results.BacktestingResultHandler",
+      "data-feed-handler": "QuantConnect.Lean.Engine.DataFeeds.FileSystemDataFeed",
+      "data-provider": "QuantConnect.Lean.Engine.DataFeeds.ApiDataProvider",
+      "real-time-handler": "QuantConnect.Lean.Engine.RealTime.BacktestingRealTimeHandler",
+      "history-provider": "QuantConnect.Lean.Engine.HistoricalData.SubscriptionDataReaderHistoryProvider",
+      "transaction-handler": "QuantConnect.Lean.Engine.TransactionHandlers.BacktestingTransactionHandler"
+    }
+  }
+}

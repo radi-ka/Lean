@@ -21,6 +21,7 @@ using QuantConnect.Configuration;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using Newtonsoft.Json;
 using QuantConnect.Optimizer.Objectives;
 using QuantConnect.Optimizer.Parameters;
 using QuantConnect.Optimizer.Strategies;
@@ -73,6 +74,11 @@ namespace QuantConnect.Optimizer
         protected readonly ConcurrentQueue<ParameterSet> PendingParameterSet;
 
         /// <summary>
+        /// Collection holding <see cref="ParameterSet"/> for each backtest id we have finished
+        /// </summary>
+        protected readonly ConcurrentDictionary<string, ParameterSet> FinishedParameterSetForBacktest;
+        
+        /// <summary>
         /// The optimization strategy being used
         /// </summary>
         protected readonly IOptimizationStrategy Strategy;
@@ -120,6 +126,7 @@ namespace QuantConnect.Optimizer
 
             RunningParameterSetForBacktest = new ConcurrentDictionary<string, ParameterSet>();
             PendingParameterSet = new ConcurrentQueue<ParameterSet>();
+            FinishedParameterSetForBacktest = new ConcurrentDictionary<string, ParameterSet>();
 
             Strategy.Initialize(OptimizationTarget, nodePacket.Constraints, NodePacket.OptimizationParameters, NodePacket.OptimizationStrategySettings);
 
@@ -173,7 +180,8 @@ namespace QuantConnect.Optimizer
                 var constraint = NodePacket.Constraints != null ? $"Constraints: ({string.Join(",", NodePacket.Constraints)})" : string.Empty;
                 Log.Trace($"LeanOptimizer.TriggerOnEndEvent({GetLogDetails()}): Optimization has ended. " +
                     $"Result for {OptimizationTarget}: was reached using ParameterSet: ({result.ParameterSet}) backtestId '{result.BacktestId}'. " +
-                    $"{constraint}");
+                    $"{constraint}\n" + 
+                    JsonConvert.SerializeObject(FinishedParameterSetForBacktest));
             }
             else
             {
@@ -215,6 +223,8 @@ namespace QuantConnect.Optimizer
                         $"LeanOptimizer.NewResult({GetLogDetails()}): Optimization compute job with id '{backtestId}' was not found");
                     return;
                 }
+
+                FinishedParameterSetForBacktest.AddOrUpdate(backtestId, parameterSet);
 
                 // we got a new result if there are any pending parameterSet to run we can now trigger 1
                 // we do this before 'Strategy.PushNewResults' so FIFO is respected

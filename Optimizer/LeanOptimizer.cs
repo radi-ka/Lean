@@ -55,7 +55,7 @@ namespace QuantConnect.Optimizer
         /// <summary>
         /// The current optimization status
         /// </summary>
-        protected OptimizationStatus Status { get; private set; } = OptimizationStatus.New;
+        public OptimizationStatus Status { get; private set; } = OptimizationStatus.New;
 
         /// <summary>
         /// The optimization target
